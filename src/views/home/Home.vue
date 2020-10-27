@@ -37,7 +37,8 @@
 		getHomeMultidata,
 		getHomeGoods
 	} from "network/home.js"
-	import {debounce} from "common/utils.js"
+	import {debounce} from "common/utils.js";
+	import {itemListenerMixin} from 'common/mixin.js'
 
 
 	export default {
@@ -54,6 +55,7 @@
 
 
 		},
+		mixins: [itemListenerMixin],
 		data() {
 			return {
 				banners: [],
@@ -77,7 +79,8 @@
 				isShowBackTop: false,
 				tabOffsetTop: 0,
 				isFixed: false,
-				saveY: 0
+				saveY: 0,
+				itemImgListener: null
 			}
 		},
 		computed: {
@@ -95,7 +98,10 @@
 		},
 		deactivated() {
 			// console.log('home deactivated')
+			//保存Y值
 			this.saveY = this.getSCrollY()
+			//取消全局事件监听
+			this.$bus.$off('ItemImageLoad', this.itemImgListener)
 		},
 		created() {
 			//1.请求多个数据
@@ -108,19 +114,37 @@
 
 		},
 		mounted() {
-			//3.监听item中图片加载完成
-			const refresh = debounce(this.$refs.scroll.refresh,500)
-			this.$bus.$on('ItemImageLoad', ()=>{
-				refresh()
-				// this.$refs.scroll.refresh()
+			// //3.监听item中图片加载完成
+			// const refresh = debounce(this.$refs.scroll.refresh,500)
+			// //对监听的事件进行保存
+			// this.itemImgListener = ()=>{
+			// 	refresh()
+			// 	// this.$refs.scroll.refresh()
 				
-			})
+			// }
+			// this.$bus.$on('ItemImageLoad', this.itemImgListener)
 
 
 		},
 		methods: {
 			// 事件监听相关
 			
+			debounce(func, delay){
+				//设置定时器开关
+				let timer = null
+
+				//返回防抖函数
+				return function(...args){
+					if(timer) clearTimeout(timer)
+
+					timer = setTimeout(() => {
+						func.apply(this,...args)
+
+					},delay)
+
+				}
+
+			},
 			tabClick(index) {
 				// console.log(index)
 				switch (index) {
@@ -196,6 +220,8 @@
 	.home-nav {
 		background-color: var(--color-tint);
 		color: #fff;
+
+		/* 在使用原生滚动的时候，为了让导航栏不跟随滚动 */
 /* 		position: fixed;
 		left: 0;
 		right: 0;

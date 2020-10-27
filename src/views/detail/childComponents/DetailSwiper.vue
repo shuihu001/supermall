@@ -1,6 +1,7 @@
+// 商品详细界面的轮播图
 <template>
 	<swiper>
-		<swiper-item v-for="item in topImages" class="swiper-item">
+		<swiper-item v-for="item in topImages" class="swiper-item" :key="item">
 			<img :src="item" />
 		</swiper-item>
 	</swiper>

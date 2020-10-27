@@ -1,3 +1,4 @@
+// 商品的详情数据
 <template>
   <div v-if="Object.keys(detailInfo).length !== 0" class="goods-info">
     <div class="info-desc clear-fix">
@@ -35,6 +36,7 @@
         }
 	    }
     },
+    //监听属性变化
     watch: {
 	    detailInfo() {
 	      // 获取图片的个数

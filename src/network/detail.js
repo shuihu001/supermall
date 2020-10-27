@@ -9,6 +9,12 @@ export function getDetail(iid) {
   })
 }
 
+export function getRecommend() {
+  return request({
+    url: '/recommend'
+  })
+}
+
 export class Goods {
   constructor(itemInfo, columns, services) {
     this.title = itemInfo.title
@@ -22,7 +28,7 @@ export class Goods {
   }
 }
 
-
+// 获取商家信息
 export class Shop {
   constructor(shopInfo) {
     this.logo = shopInfo.shopLogo;

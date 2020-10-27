@@ -1,10 +1,11 @@
 <template>
 	<div class="goods-item" @click="itemClick">
-		<img :src="goodsItem.show.img" alt=" " @load="imageLoad"/>
+    <!-- @load：监听图片是否加载完成 -->
+		<img :src="showImage" alt=" " @load="imageLoad"/>
 		<div class="goods-info">
 			<p>{{goodsItem.title}}</p>
 			<span class="price">{{goodsItem.price}}</span>
-			<span class="colle">{{goodsItem.cfav}}</span>
+			<span class="collect">{{goodsItem.cfav}}</span>
 		</div>
 	</div>
 </template>
@@ -19,15 +20,28 @@
 					return{}
 				}
 			}
-		},
+    },
+    computed:{
+      showImage(){
+        return this.goodsItem.image || this.goodsItem.show.img
+      }
+
+    },
 		methods:{
 			imageLoad(){
 				// console.log('imageLoad')
 				this.$bus.$emit('ItemImageLoad')
 			},
 			itemClick(){
-				// console.log('跳转到详情页')
-				this.$router.push('/detail/' + this.goodsItem.iid)
+        // console.log('跳转到详情页')
+        //带参数的路由跳转方式1： 动态路由
+        this.$router.push('/detail/' + this.goodsItem.iid)
+         //带参数的路由跳转方式2：query
+        //  this.$router.push({
+        //    path:'/detail',
+        //    query:{
+        //      iid: this.goodsItem.iid
+        //  }})
 			}
 		}
 	}
@@ -66,13 +80,13 @@
   .goods-info .collect {
     position: relative;
   }
-/*  .goods-info .collect::before {
+ .goods-info .collect::before {
     content: '';
     position: absolute;
     left: -15px;
     top: -1px;
     width: 14px;
     height: 14px;
-    background: url("~assets/img/common/collect.svg") 0 0/14px 14px;
-  } */
+    background: url("~assets/imgs/common/collect.svg") 0 0/14px 14px;
+  }
 </style>

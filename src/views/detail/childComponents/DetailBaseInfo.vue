@@ -1,3 +1,4 @@
+// 商品销量、退货补运费等信息
 <template>
 	<!-- 判断goods是否为空对象 -->
   <div v-if="Object.keys(goods).length !== 0" class="base-info">

@@ -1,3 +1,4 @@
+// 导航栏
 <template>
 	<div id="detailNavBar">
 		<nav-bar>
@@ -8,7 +9,7 @@
 				<div v-for="(item, index) in titles" 
 				class="title-item"
 				:class="{active: index===currentIndex}"
-				@click="itemClick(index)">{{item}}</div>
+				@click="itemClick(index)" :key="index">{{item}}</div>
 			</div>
 		</nav-bar>
 	</div>
@@ -30,6 +31,7 @@
 		methods:{
 			itemClick(index){
 				this.currentIndex = index
+				this.$emit('titleClick', index)
 			},
 			backClick(){
 				// this.$router.go(-1)

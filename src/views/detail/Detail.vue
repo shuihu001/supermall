@@ -1,13 +1,14 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav"/>
+    <detail-nav-bar class="detail-nav" @titleClick='titleClick'/>
     <scroll class="content" ref="scroll">
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"/>
       <detail-shop-info :shop="shop"/>
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"/>
       <detail-param-info :param-info="paramInfo"/>
-			<detail-comment-info></detail-comment-info>
+			<detail-comment-info :comment-info="commentInfo"></detail-comment-info>
+      <goods-list :goods ="recommends" />
     </scroll>
   </div>
 </template>
@@ -22,8 +23,11 @@
 	import DetailCommentInfo from "./childComponents/DetailCommentInfo.vue"
 
   import Scroll from 'components/common/scroll/Scroll'
+  import GoodsList from '../../components/content/goods/GoodsList';
 
-  import {getDetail, Goods, Shop, GoodsParam} from "network/detail";
+  import {getDetail, Goods, Shop, GoodsParam, getRecommend} from "network/detail";
+  import {debounce} from "common/utils.js";
+  import {itemListenerMixin} from 'common/mixin.js'
 
   export default {
     name: "Detail",
@@ -35,8 +39,10 @@
       DetailGoodsInfo,
       DetailParamInfo,
 			DetailCommentInfo,
-      Scroll
+      Scroll,
+      GoodsList
     },
+    mixins: [itemListenerMixin],
     data() {
       return {
         iid: null,
@@ -45,17 +51,26 @@
         shop: {},
         detailInfo: {},
         paramInfo: {},
-				commentInfo: {}
+        commentInfo: {},
+        recommends: [],
+        themeTopYs: [0, 1000, 2000, 3000],
+
       }
     },
     created() {
       // 1.保存传入的iid
       this.iid = this.$route.params.iid
 
+      //3.请求推荐数据
+      getRecommend().then(res => {
+        // console.log(res);
+        this.recommends = res.data.list
+      })
+
       // 2.根据iid请求详情数据
       getDetail(this.iid).then(res => {
         // 1.获取顶部的图片轮播数据
-        console.log(res);
+        // console.log(res);
         const data = res.result;
         this.topImages = data.itemInfo.topImages
 
@@ -76,11 +91,27 @@
 					this.commentInfo = data.rate.list[0]
 				}
       })
+
+    },
+		destroyed() {
+			//取消全局事件监听
+			this.$bus.$off('ItemImageLoad', this.itemImgListener)
+		},
+    mounted() {
+
+
     },
     methods: {
       imageLoad() {
         this.$refs.scroll.refresh()
+      },
+
+      titleClick(index){
+        // console.log(index)
+        this.$refs.scroll.scrollTo(0,-this.themeTopYs[index],100)
+
       }
+
     }
   }
 </script>

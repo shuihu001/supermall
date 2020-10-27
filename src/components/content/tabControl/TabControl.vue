@@ -1,7 +1,7 @@
 <template>
 	<div class="tab-control">
 		<div v-for="(item,index) in titles" class="tab-control-item" 
-		:class="{active: index===currentIndex}" @click="itemClick(index)">
+		:class="{active: index===currentIndex}" @click="itemClick(index)" :key="index">
 			<span>{{item}}</span>
 		</div>
 
@@ -54,6 +54,7 @@
 		
 	}
 	.active span{
-		border-bottom: 3px solid var(--color-tint);
+		/* 加下划线：宽度，样式（dotted solid double dashed;），颜色 */
+		border-bottom: 3px dotted var(--color-tint);
 	}
 </style>
