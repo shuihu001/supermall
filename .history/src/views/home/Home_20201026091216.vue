@@ -37,8 +37,7 @@
 		getHomeMultidata,
 		getHomeGoods
 	} from "network/home.js"
-	import {debounce} from "common/utils.js";
-	import {itemListenerMixin} from 'common/mixin.js'
+	import {debounce} from "common/utils.js"
 
 
 	export default {
@@ -55,7 +54,6 @@
 
 
 		},
-		mixins: [itemListenerMixin],
 		data() {
 			return {
 				banners: [],
@@ -79,8 +77,7 @@
 				isShowBackTop: false,
 				tabOffsetTop: 0,
 				isFixed: false,
-				saveY: 0,
-				
+				saveY: 0
 			}
 		},
 		computed: {
@@ -93,15 +90,12 @@
 		},
 		activated() {
 			// console.log('home activated')
-			this.$refs.scroll.scrollTo(0, this.saveY,0)
+			this.$refs.scroll.scrollTo(0, this.saveY,1)
 			this.$refs.scroll.refresh()
 		},
 		deactivated() {
 			// console.log('home deactivated')
-			//保存Y值
 			this.saveY = this.getSCrollY()
-			//取消全局事件监听
-			this.$bus.$off('ItemImageLoad', this.itemImgListener)
 		},
 		created() {
 			//1.请求多个数据
@@ -114,15 +108,13 @@
 
 		},
 		mounted() {
-			// //3.监听item中图片加载完成
-			// const refresh = debounce(this.$refs.scroll.refresh,500)
-			// //对监听的事件进行保存
-			// this.itemImgListener = ()=>{
-			// 	refresh()
-			// 	// this.$refs.scroll.refresh()
+			//3.监听item中图片加载完成
+			const refresh = debounce(this.$refs.scroll.refresh,500)
+			this.$bus.$on('ItemImageLoad', ()=>{
+				refresh()
+				// this.$refs.scroll.refresh()
 				
-			// }
-			// this.$bus.$on('ItemImageLoad', this.itemImgListener)
+			})
 
 
 		},

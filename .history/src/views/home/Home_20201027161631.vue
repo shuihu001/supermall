@@ -37,8 +37,7 @@
 		getHomeMultidata,
 		getHomeGoods
 	} from "network/home.js"
-	import {debounce} from "common/utils.js";
-	import {itemListenerMixin} from 'common/mixin.js'
+	import {debounce} from "common/utils.js"
 
 
 	export default {
@@ -55,7 +54,6 @@
 
 
 		},
-		mixins: [itemListenerMixin],
 		data() {
 			return {
 				banners: [],
@@ -80,7 +78,7 @@
 				tabOffsetTop: 0,
 				isFixed: false,
 				saveY: 0,
-				
+				itemImgListener: null
 			}
 		},
 		computed: {
@@ -114,15 +112,15 @@
 
 		},
 		mounted() {
-			// //3.监听item中图片加载完成
-			// const refresh = debounce(this.$refs.scroll.refresh,500)
-			// //对监听的事件进行保存
-			// this.itemImgListener = ()=>{
-			// 	refresh()
-			// 	// this.$refs.scroll.refresh()
+			//3.监听item中图片加载完成
+			const refresh = debounce(this.$refs.scroll.refresh,500)
+			//对监听的事件进行保存
+			this.itemImgListener = ()=>{
+				refresh()
+				// this.$refs.scroll.refresh()
 				
-			// }
-			// this.$bus.$on('ItemImageLoad', this.itemImgListener)
+			}
+			this.$bus.$on('ItemImageLoad', this.itemImgListener)
 
 
 		},

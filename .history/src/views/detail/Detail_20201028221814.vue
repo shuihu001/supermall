@@ -10,7 +10,6 @@
 			<detail-comment-info :comment-info="commentInfo" ref="comment"></detail-comment-info>
       <goods-list :goods ="recommends" ref = "recommend"/>
     </scroll>
-    <detail-bottom-bar/>
   </div>
 </template>
 

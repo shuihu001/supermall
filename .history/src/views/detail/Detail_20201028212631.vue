@@ -10,7 +10,6 @@
 			<detail-comment-info :comment-info="commentInfo" ref="comment"></detail-comment-info>
       <goods-list :goods ="recommends" ref = "recommend"/>
     </scroll>
-    <detail-bottom-bar/>
   </div>
 </template>
 
@@ -21,8 +20,7 @@
   import DetailShopInfo from './childComponents/DetailShopInfo'
   import DetailGoodsInfo from './childComponents/DetailGoodsInfo'
   import DetailParamInfo from './childComponents/DetailParamInfo'
-  import DetailCommentInfo from "./childComponents/DetailCommentInfo.vue"
-  	import DetailBottomBar from "./childComponents/DetailBottomBar.vue"
+	import DetailCommentInfo from "./childComponents/DetailCommentInfo.vue"
 
   import Scroll from 'components/common/scroll/Scroll'
   import GoodsList from '../../components/content/goods/GoodsList';
@@ -42,8 +40,7 @@
       DetailParamInfo,
 			DetailCommentInfo,
       Scroll,
-      GoodsList,
-      DetailBottomBar
+      GoodsList
     },
     mixins: [itemListenerMixin],
     data() {

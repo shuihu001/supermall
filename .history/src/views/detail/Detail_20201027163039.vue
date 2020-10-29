@@ -1,16 +1,15 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav" @titleClick='titleClick' ref="nav"/>
-    <scroll class="content" ref="scroll" @scroll="contentScroll" :probe-type="3">
+    <detail-nav-bar class="detail-nav" @titleClick='titleClick'/>
+    <scroll class="content" ref="scroll">
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"/>
       <detail-shop-info :shop="shop"/>
-      <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad" />
-      <detail-param-info :param-info="paramInfo" ref="params"/>
-			<detail-comment-info :comment-info="commentInfo" ref="comment"></detail-comment-info>
-      <goods-list :goods ="recommends" ref = "recommend"/>
+      <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"/>
+      <detail-param-info :param-info="paramInfo"/>
+			<detail-comment-info :comment-info="commentInfo"></detail-comment-info>
+      <goods-list :goods ="recommends" />
     </scroll>
-    <detail-bottom-bar/>
   </div>
 </template>
 
@@ -21,15 +20,13 @@
   import DetailShopInfo from './childComponents/DetailShopInfo'
   import DetailGoodsInfo from './childComponents/DetailGoodsInfo'
   import DetailParamInfo from './childComponents/DetailParamInfo'
-  import DetailCommentInfo from "./childComponents/DetailCommentInfo.vue"
-  	import DetailBottomBar from "./childComponents/DetailBottomBar.vue"
+	import DetailCommentInfo from "./childComponents/DetailCommentInfo.vue"
 
   import Scroll from 'components/common/scroll/Scroll'
   import GoodsList from '../../components/content/goods/GoodsList';
 
   import {getDetail, Goods, Shop, GoodsParam, getRecommend} from "network/detail";
-  import {debounce} from "common/utils.js";
-  import {itemListenerMixin} from 'common/mixin.js'
+  import {debounce} from "common/utils.js"
 
   export default {
     name: "Detail",
@@ -42,10 +39,8 @@
       DetailParamInfo,
 			DetailCommentInfo,
       Scroll,
-      GoodsList,
-      DetailBottomBar
+      GoodsList
     },
-    mixins: [itemListenerMixin],
     data() {
       return {
         iid: null,
@@ -56,10 +51,8 @@
         paramInfo: {},
         commentInfo: {},
         recommends: [],
-        themeTopYs: [],
-        getthemeTopy: null,
-        currentIndex: 0,
-
+        themeTopYs: [0, 1000, 2000, 3000],
+        itemImgListener: null
       }
     },
     created() {
@@ -94,29 +87,7 @@
 				//6.获取评论信息
 				if(data.rate.cRate !== 0){
 					this.commentInfo = data.rate.list[0]
-        }
-
-        this.getthemeTopy = debounce(() => {
-          this.themeTopYs = []
-          this.themeTopYs.push(0);
-          this.themeTopYs.push(this.$refs.params.$el.offsetTop - 50);
-          this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
-          this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
-          this.themeTopYs.push(Number.MAX_VALUE)
-          console.log(this.themeTopYs);
-        })
-
-
-        // this.$nextTick (() => {
-        //   this.themeTopYs = []
-        //   this.themeTopYs.push(0);
-        //   this.themeTopYs.push(this.$refs.params.$el.offsetTop);
-        //   this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
-        //   this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
-        //   console.log(this.themeTopYs);
-        // })
-
-
+				}
       })
 
     },
@@ -125,47 +96,25 @@
 			this.$bus.$off('ItemImageLoad', this.itemImgListener)
 		},
     mounted() {
-
-
-    },
-    updated() {
-      // this.themeTopYs = []
-      // this.themeTopYs.push(0);
-      // this.themeTopYs.push(this.$refs.params.$el.offsetTop)
-      // this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
-      // this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
-      // console.log(this.themeTopYs)
+      const refresh = debounce(this.$refs.scroll.refresh,500)
+      			//对监听的事件进行保存
+			this.itemImgListener = ()=>{
+				refresh()
+				// this.$refs.scroll.refresh()
+				
+			}
+			this.$bus.$on('ItemImageLoad', this.itemImgListener)
 
     },
     methods: {
       imageLoad() {
         this.$refs.scroll.refresh()
-        this.getthemeTopy()
-
       },
 
       titleClick(index){
         // console.log(index)
         this.$refs.scroll.scrollTo(0,-this.themeTopYs[index],100)
 
-      },
-      contentScroll(position){
-        // console.log(position)
-        // 1.获取y值
-        const positionY = -position.y
-        // 2.positionY和主题中值进行对比
-        for(let i in this.themeTopYs.slice(0, -1)){
-          i = parseInt(i)
-          // i*=1
-          if(this.currentIndex !== i && (positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i + 1]) ) {
-            console.log(i);
-            this.currentIndex = i,
-            this.$refs.nav.currentIndex = this.currentIndex
-            // console.log(this.currentIndex)
-
-          }
-          
-        }
       }
 
     }

@@ -80,7 +80,7 @@
 				tabOffsetTop: 0,
 				isFixed: false,
 				saveY: 0,
-				
+				itemImgListener: null
 			}
 		},
 		computed: {

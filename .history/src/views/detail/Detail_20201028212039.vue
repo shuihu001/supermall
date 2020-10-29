@@ -10,7 +10,6 @@
 			<detail-comment-info :comment-info="commentInfo" ref="comment"></detail-comment-info>
       <goods-list :goods ="recommends" ref = "recommend"/>
     </scroll>
-    <detail-bottom-bar/>
   </div>
 </template>
 
@@ -21,8 +20,7 @@
   import DetailShopInfo from './childComponents/DetailShopInfo'
   import DetailGoodsInfo from './childComponents/DetailGoodsInfo'
   import DetailParamInfo from './childComponents/DetailParamInfo'
-  import DetailCommentInfo from "./childComponents/DetailCommentInfo.vue"
-  	import DetailBottomBar from "./childComponents/DetailBottomBar.vue"
+	import DetailCommentInfo from "./childComponents/DetailCommentInfo.vue"
 
   import Scroll from 'components/common/scroll/Scroll'
   import GoodsList from '../../components/content/goods/GoodsList';
@@ -42,8 +40,7 @@
       DetailParamInfo,
 			DetailCommentInfo,
       Scroll,
-      GoodsList,
-      DetailBottomBar
+      GoodsList
     },
     mixins: [itemListenerMixin],
     data() {
@@ -154,11 +151,11 @@
         // 1.获取y值
         const positionY = -position.y
         // 2.positionY和主题中值进行对比
-        for(let i in this.themeTopYs.slice(0, -1)){
+        for(let i in this.themeTopYs){
           i = parseInt(i)
           // i*=1
-          if(this.currentIndex !== i && (positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i + 1]) ) {
-            console.log(i);
+          if(this.currentIndex !== i && ((i < this.themeTopYs.length - 1 && positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i + 1]) || (i == this.themeTopYs.length-1 && positionY >= this.themeTopYs[i]))) {
+            // console.log(i);
             this.currentIndex = i,
             this.$refs.nav.currentIndex = this.currentIndex
             // console.log(this.currentIndex)
