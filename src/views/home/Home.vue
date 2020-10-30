@@ -28,7 +28,7 @@
 	import NavBar from "components/common/navbar/NavBar.vue"
 	import TabControl from "components/content/tabControl/TabControl.vue"
 	import GoodsList from 'components/content/goods/GoodsList.vue'
-	import BackTop from 'components/content/backTop/BackTop.vue'
+	// import BackTop from 'components/content/backTop/BackTop.vue'
 
 	import Scroll from 'components/common/scroll/Scroll.vue'
 
@@ -50,7 +50,7 @@
 			NavBar,
 			TabControl,
 			GoodsList,
-			BackTop,
+			// BackTop,
 			Scroll,
 
 
@@ -76,7 +76,7 @@
 					},
 				},
 				currentType: "pop",
-				isShowBackTop: false,
+				// isShowBackTop: false,
 				tabOffsetTop: 0,
 				isFixed: false,
 				saveY: 0,
